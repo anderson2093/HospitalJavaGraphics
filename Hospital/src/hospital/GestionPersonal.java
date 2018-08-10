@@ -345,6 +345,81 @@ public class GestionPersonal extends JFrame implements ActionListener{
         }
       }
     });
+       this.btnModificar = new JButton("Modificar");
+    this.btnModificar.addActionListener(new ActionListener()
+    {
+      public void actionPerformed(ActionEvent e)
+      {
+        String prenom = GestionPersonal.this.prenomField.getText().toString();
+        String nom = GestionPersonal.this.nomField.getText().toString();
+        String tel = GestionPersonal.this.telfField.getText().toString();
+        String adresse = GestionPersonal.this.direccionField.getText().toString();
+        
+        String id = GestionPersonal.this.numeroField.getText().toString();
+        if (!id.equals(""))
+        {
+          if (comboBox.getSelectedItem().toString().equals("Docteur"))
+          {
+            String sql = "select numero from docteur where docteur.numero = " + id;
+            try
+            {
+              GestionPersonal.this.preparado = GestionPersonal.this.con.prepareStatement(sql);
+              GestionPersonal.this.resultado = GestionPersonal.this.preparado.executeQuery();
+              if (GestionPersonal.this.resultado.next())
+              {
+                AnadierDoctor obj = new AnadierDoctor(GestionPersonal.this.con, nom, prenom, tel, adresse, id, true);
+                obj.setLocationRelativeTo(null);
+                obj.setVisible(true);
+              }
+              else
+              {
+                JOptionPane.showMessageDialog(null, "Este empleado no es un doctor");
+              }
+            }
+            catch (SQLException e1)
+            {
+              e1.printStackTrace();
+            }
+          }
+          else if (comboBox.getSelectedItem().toString().equals("Enfermera"))
+          {
+            String sql = "select salaire from infirmier where numero = " + id;
+            try
+            {
+              GestionPersonal.this.preparado = GestionPersonal.this.con.prepareStatement(sql);
+              GestionPersonal.this.resultado = GestionPersonal.this.preparado.executeQuery();
+              if (GestionPersonal.this.resultado.next())
+              {
+                String salaire = GestionPersonal.this.resultado.getString("salaire");
+                
+                AniadirEnfermera obj = new AniadirEnfermera(GestionPersonal.this.con, nom, prenom, tel, adresse, id, salaire, true);
+                obj.setLocationRelativeTo(null);
+                obj.setVisible(true);
+              }
+              else
+              {
+                JOptionPane.showMessageDialog(null, "Este empleado no es una enfermera");
+              }
+            }
+            catch (SQLException e1)
+            {
+              e1.printStackTrace();
+            }
+          }
+          else
+          {
+            JOptionPane.showMessageDialog(null, "Seleccionar una profesion");
+          }
+        }
+        else {
+          JOptionPane.showMessageDialog(null, "Seleccionar un empleo");
+        }
+      }
+      });
+    this.btnModificar.setBounds(185, 688, 85, 55);
+    this.panel1.add(this.btnModificar);
+    
+
     this.btnDecreciente.setBounds(1134, 124, 97, 25);
     this.panel1.add(this.btnDecreciente);
     
@@ -428,32 +503,11 @@ public class GestionPersonal extends JFrame implements ActionListener{
     });
         this.btnAgregar.setBounds(68, 688, 97, 55);
         this.panel1.add(this.btnAgregar);
+        
+        
   }
   
-  public void insertTable()
-  {
-      String sql="Insert into employe(nom,prenom,adresse,tel) values("+nomField.getText().toString()+","+prenomField.getText().toString()+","+direccionField.getText().toString()+","+telfField.getText().toString()+")";
-      try {
-        /*this.preparado = this.con.prepareStatement(sql);
-        this.resultado = this.preparado.executeQuery();
-        this.tabla.setModel(Utils.resultSetToTableModel(this.resultado));*/
-        
-        /*
-        this.preparado=con.prepareStatement(sql);
-        preparado.setString(1, nomField.getText().toString());
-        preparado.setString(2, prenomField.getText().toString());
-        preparado.setString(3, direccionField.getText().toString());
-        preparado.setString(4, telfField.getText().toString());
-        preparado.executeUpdate();
-        
-        */
-        preparado.executeUpdate("Insert into employe(nom,prenom,adresse,tel) values("+nomField.getText().toString()+","+prenomField.getText().toString()+","+direccionField.getText().toString()+","+telfField.getText().toString()+")");
-       // preparado.executeUpdate();
-      } catch (Exception e) {
-          e.printStackTrace();
-          
-      }
-  }
+  
   public void UpdateTable()
   {
     String sql = "Select * from employe";
