@@ -120,11 +120,11 @@ public class AniadirEnfermera extends JFrame{
     this.contentPane.add(lblSalaire);
     JButton btnAniadirButton;
     btnAniadirButton=new JButton();
-    //btnAniadiButton1=new JButton();
+    JButton btnAniadiButton1=new JButton();
     if (!modify) {
       btnAniadirButton = new JButton("Añadir");
     } else {
-      //btnAniadirButton1 = new JButton("Modificar");
+      JButton btnAniadirButton1 = new JButton("Modificar");
     }
     btnAniadirButton.addActionListener(new ActionListener()
     {
